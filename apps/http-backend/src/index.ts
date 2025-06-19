@@ -7,14 +7,13 @@ import { middleware } from "./middleware"
 import {CreateUserSchema, SigninSchema, CreateRoomSchema} from "@repo/common/types"
 import { prismaClient } from "@repo/db/client"
 import cors from "cors"
-import dotenv from "dotenv";
-dotenv.config();
+
 const app = express()
 
 app.use(cors())
 app.use(express.json())
 
-const port = process.env.PORT || 3000
+const port = 3001
 
 app.post("/signup",async (req, res) => {
     const parsedData = CreateUserSchema.safeParse(req.body)
@@ -117,7 +116,7 @@ app.post("/room", middleware, async(req, res) => {
 
 app.get("/chats/:roomId", async (req,res)=>{
     try {
-        const roomId = String(req.params.roomId)
+        const roomId = Number(req.params.roomId)
 
         const messages = await prismaClient.chat.findMany({
             where:{
@@ -140,7 +139,7 @@ app.get("/chats/:roomId", async (req,res)=>{
 
 app.delete("/chats/:roomId/shapes/:shapeId", async (req,res)=>{
     try {
-        const roomId = String(req.params.roomId)
+        const roomId = Number(req.params.roomId)
         const shapeId = req.params.shapeId
 
         console.log(roomId,shapeId)
