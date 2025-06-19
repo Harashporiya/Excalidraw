@@ -8,15 +8,18 @@ type Shapes = {
     y: number;
     width: number;
     height: number;
+    color:string;
 } | {
     id: string;
     type: "circle";
     centerX: number;
     centerY: number;
     radius: number;
+    color:string;
 } | {
     id: string;
     type: "pencil";
+    color:string;
     points: { x: number; y: number }[];
 } | {
     id:string;
@@ -25,6 +28,7 @@ type Shapes = {
     y:number;
     fontSize:number;
     fontFamily:string;
+    color:string;
 }
 
 export class Game {
@@ -38,6 +42,7 @@ export class Game {
     socket: WebSocket;
     private selectedTool: Tool = "circle"
     private currentPencilPoints: { x: number, y: number }[] = [];
+    private currentColor: string = "#ffffff";
 
     constructor(canvas: HTMLCanvasElement, roomId: string, socket: WebSocket) {
         this.canvas = canvas
@@ -59,7 +64,11 @@ export class Game {
         this.canvas.removeEventListener("mousemove", this.mouseMoveHandlers)
     }
 
-    setTool(tool: "circle" | "rect" | "pencil" | "eraser") {
+    setColor(color: string) {
+        this.currentColor = color;
+    }
+
+    setTool(tool: "circle" | "rect" | "pencil" | "eraser" | "text") {
         this.selectedTool = tool
 
         if (tool === "eraser") {
@@ -92,32 +101,33 @@ export class Game {
 
     clearCanves() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.ctx.fillStyle = "rgba(0, 0, 0)"
-        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height)
+        this.ctx.fillStyle = "rgba(0, 0, 0)";
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
         this.existingShapes.map((shape) => {
-            this.ctx.strokeStyle = "rgba(255, 255, 255)"
+            // Use shape's color if it exists, otherwise use default white
+            this.ctx.strokeStyle = (shape as any).color || "rgba(255, 255, 255)";
             this.ctx.lineWidth = 2;
 
             if (shape.type === "rect") {
-                this.ctx.strokeRect(shape.x, shape.y, shape.width, shape.height)
+                this.ctx.strokeRect(shape.x, shape.y, shape.width, shape.height);
             } else if (shape.type === "circle") {
-                this.ctx.beginPath()
+                this.ctx.beginPath();
                 this.ctx.arc(shape.centerX, shape.centerY, shape.radius, 0, Math.PI * 2);
-                this.ctx.stroke()
-                this.ctx.closePath()
+                this.ctx.stroke();
+                this.ctx.closePath();
             } else if (shape.type === "pencil") {
                 if (shape.points.length > 1) {
-                    this.ctx.beginPath()
-                    this.ctx.moveTo(shape.points[0].x, shape.points[0].y)
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(shape.points[0].x, shape.points[0].y);
                     for (let i = 1; i < shape.points.length; i++) {
-                        this.ctx.lineTo(shape.points[i].x, shape.points[i].y)
+                        this.ctx.lineTo(shape.points[i].x, shape.points[i].y);
                     }
                     this.ctx.stroke();
                     this.ctx.closePath();
                 }
             }
-        })
+        });
     }
 
     private getMousePos(e: MouseEvent) {
@@ -239,7 +249,8 @@ export class Game {
                 x: this.startX,
                 y: this.startY,
                 height,
-                width
+                width,
+                color: this.currentColor
             }
 
         } else if (selectedTool == "circle") {
@@ -249,13 +260,15 @@ export class Game {
                 type: "circle",
                 radius: radius,
                 centerX: this.startX + radius / 2,
-                centerY: this.startY + radius / 2
+                centerY: this.startY + radius / 2,
+                color: this.currentColor
             }
         } else if (selectedTool === "pencil" && this.currentPencilPoints.length > 1) {
             shape = {
                 id: this.generateId(),
                 type: "pencil",
-                points: [...this.currentPencilPoints]
+                points: [...this.currentPencilPoints],
+                color: this.currentColor
             }
         }
         if (!shape) return;
@@ -285,7 +298,7 @@ export class Game {
 
                 // Redraw everything including current pencil stroke
                 this.clearCanves();
-                this.ctx.strokeStyle = "rgba(255, 255, 255)";
+                this.ctx.strokeStyle = this.currentColor;
                 this.ctx.lineWidth = 2;
 
                 if (this.currentPencilPoints.length > 1) {
