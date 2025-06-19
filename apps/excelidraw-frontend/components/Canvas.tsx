@@ -1,11 +1,11 @@
 "use client"
 import { useEffect, useRef } from "react";
 import IconButton from "./IconButton";
-import {Circle, Eraser, Pencil, RectangleHorizontalIcon, TypeOutline} from "lucide-react"
+import {Circle, Eraser, Minus, MoveRight, Pencil, RectangleHorizontalIcon, TypeOutline} from "lucide-react"
 import { useState } from "react";
 import { Game } from "@/draw/Game";
 
-export type Tool = "circle" | "rect" | "pencil" | "eraser" | "text"
+export type Tool = "circle" | "rect" | "pencil" | "eraser" | "text" | "line" | "arrowRight"
 
 export default function Canvas({roomId, socket}: {roomId: string, socket: WebSocket}) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -69,6 +69,8 @@ function TopBar({
                 <IconButton onClick={() => setSelectedTool("circle")} activated={selectedTool === "circle"} icon={<Circle/>} />
                 <IconButton onClick={() => setSelectedTool("eraser")} activated={selectedTool === "eraser"} icon={<Eraser/>} />
                 <IconButton onClick={() => setSelectedTool("text")} activated={selectedTool === "text"} icon={<TypeOutline/>} />
+                <IconButton onClick={() => setSelectedTool("line")} activated={selectedTool === "line"} icon={<Minus/>} />
+                <IconButton onClick={() => setSelectedTool("arrowRight")} activated={selectedTool === "arrowRight"} icon={<MoveRight/>} />
                 <div className="ml-2 mt-2">
                     <input 
                         type="color" 
