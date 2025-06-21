@@ -7,13 +7,26 @@ import { middleware } from "./middleware"
 import {CreateUserSchema, SigninSchema, CreateRoomSchema} from "@repo/common/types"
 import { prismaClient } from "@repo/db/client"
 import cors from "cors"
-
+import {config} from "dotenv"
 const app = express()
 
-app.use(cors())
+config()
+
+const corsOptions = {
+  origin: [
+    process.env.FRONTEND_URL
+  ].filter((origin): origin is string => Boolean(origin)),
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+};
+
+app.use(cors(corsOptions));
 app.use(express.json())
 
-const port = 3001
+console.log(process.env.PORT)
+const port = process.env.PORT || 3000
+
 
 app.post("/signup",async (req, res) => {
     const parsedData = CreateUserSchema.safeParse(req.body)
