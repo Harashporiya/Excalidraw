@@ -4,9 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "npm run build && npm run start",
-    "build": "rm -rf dist/ && tsc && cp -r ../../node_modules ./node_modules",
-    "start": "node ./dist/index.js"
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "clean": "rm -rf dist"
   },
   "dependencies": {
     "@repo/db": "workspace:*",
