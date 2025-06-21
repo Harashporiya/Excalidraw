@@ -1,5 +1,7 @@
-const JWT_SECRET = process.env.JWT_SECRET || "hiuehy8y8uy8932e8";
-
+import dotenv from 'dotenv';
+dotenv.config();
+const JWT_SECRET = process.env.JWT_SECRET 
+console.log(JWT_SECRET)
 module.exports = {
   JWT_SECRET
 };
