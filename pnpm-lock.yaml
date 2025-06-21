@@ -76,6 +76,9 @@ importers:
       cors:
         specifier: ^2.8.5
         version: 2.8.5
+      env:
+        specifier: ^0.0.2
+        version: 0.0.2
       express:
         specifier: ^5.1.0
         version: 5.1.0
@@ -1454,6 +1457,10 @@ packages:
   enhanced-resolve@5.18.1:
     resolution: {integrity: sha512-ZSW3ma5GkcQBIpwZTSRAI8N71Uuwgs93IezB7mf7R60tC8ZbJideoDNKjHn2O9KIlx6rkGTTEk1xUCK2E1Y2Yg==}
     engines: {node: '>=10.13.0'}
+
+  env@0.0.2:
+    resolution: {integrity: sha512-yP8LfjO4ughSHD/3HgLPinWzexmaOGvRfs2TFx0SZhOm7j1xPi9evjuGcLiNVHIGLmcsgMak4eDbBzlYqGIVxw==}
+    engines: {node: '>= 0.5.9'}
 
   es-abstract@1.24.0:
     resolution: {integrity: sha512-WSzPgsdLtTcQwm4CROfS5ju2Wa1QQcVeT37jFjYzdFz1r9ahadC8B8/a4qxJxM+09F18iumCdRmlr96ZYkQvEg==}
@@ -4328,6 +4335,8 @@ snapshots:
     dependencies:
       graceful-fs: 4.2.11
       tapable: 2.2.2
+
+  env@0.0.2: {}
 
   es-abstract@1.24.0:
     dependencies:
